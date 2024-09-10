@@ -10,7 +10,12 @@ const dialogPonto = document.getElementById("dialog-ponto");
 const btnDialogFechar = document.getElementById("btn-dialog-fechar");
 btnDialogFechar.addEventListener("click", () =>{
     dialogPonto.close();
-})
+});
+
+// TO DO:
+// A data e hora do dialog devem ser atualizadas automaticamente
+// a hora a cada segundo e a data sempre 00:00:00
+// o setInterval do dialog tem que ser desativado ao fechar o dialog
 
 const dialogData = document.getElementById("dialog-data");
 dialogData.textContent = "Data: " + getCurrentDate();
@@ -46,7 +51,21 @@ btnDialogBaterPonto.addEventListener("click", () => {
 
     console.log(ponto);
 
+    saveRegisterLocalStorage(JSON.stringify(ponto));
+
+    dialogPonto.close();
+
+    // TO-DO:
+    // Fechar o dialog ao bater o ponto e apresentar, de alguma forma
+    // uma confirmação (ou não) para o usuário
+
 });
+
+function saveRegisterLocalStorage(register) {
+    // TO-DO:
+    // salvar array de objetos
+    localStorage.setItem("register", register);
+}
 
 function register() {
     dialogPonto.showModal();
@@ -74,6 +93,7 @@ function getWeekDay(){
 
 
 function getCurrentHour(){
+    // TO-DO:
     // Considerar os metodos abaixo para incluir numeros < 10
     // padStart
     // slice()
@@ -98,6 +118,7 @@ function getCurrentHour(){
     return hour + ":" + min + ":" + sec;*/
 
 function getCurrentDate() {
+    // TO-DO:
     // Alterar a solução para considerar padStart ou slice
     // Considerar formatos diferentes de data, conforma localização
     // do usuario dd/mm/yyyy, mm/dd/yyyy, yyyy/mm/dd
