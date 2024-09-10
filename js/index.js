@@ -16,7 +16,7 @@ const dialogData = document.getElementById("dialog-data");
 dialogData.textContent = "Data: " + getCurrentDate();
 
 const dialogHora = document.getElementById("dialog-hora");
-dialogData.textContent = "Hora: " + getCurrentHour();
+dialogHora.textContent = "Hora: " + getCurrentHour();
 
 
 diaSemana.textContent = getWeekDay();
@@ -97,21 +97,22 @@ function getCurrentHour(){
     }
     return hour + ":" + min + ":" + sec;*/
 
-function getCurrentDate(){
+function getCurrentDate() {
     // Alterar a solução para considerar padStart ou slice
     // Considerar formatos diferentes de data, conforma localização
     // do usuario dd/mm/yyyy, mm/dd/yyyy, yyyy/mm/dd
-    // Verificar se no Date()
+    // Verificar se no Date() há algum método que possa auxiliar
+    // locale
     const date = new Date();
-   let mes = date.getMonth();
-   let dia = date.getDate();
-   if (dia < 10) {
-        dia = "0" + dia
+   let month = date.getMonth();
+   let day = date.getDate();
+   if (day < 10) {
+        day = "0" + day
    }
-   if (mes < 10) {
-        mes = "0" + (mes+1)
+   if (month < 10) {
+        month = "0" + (month+1)
    }
-   return dia + "/" + mes + "/" + date.getFullYear(); 
+   return day + "/" + month + "/" + date.getFullYear(); 
 }
 
 /*function register(){
