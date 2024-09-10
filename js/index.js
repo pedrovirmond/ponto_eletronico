@@ -97,10 +97,6 @@ function getCurrentHour(){
     }
     return hour + ":" + min + ":" + sec;*/
 
-function printCurrentHour(){
-    horaMinSeg.textContent = getCurrentHour();
-}
-
 function getCurrentDate(){
     // Alterar a solução para considerar padStart ou slice
     // Considerar formatos diferentes de data, conforma localização
@@ -123,5 +119,9 @@ function getCurrentDate(){
     
     alert("Bater Ponto!");
 }*/
+
+function printCurrentHour(){
+    horaMinSeg.textContent = getCurrentHour();
+}
 
 setInterval(printCurrentHour,1000);
