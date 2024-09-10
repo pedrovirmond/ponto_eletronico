@@ -2,13 +2,58 @@ const diaSemana = document.getElementById("dia-semana");
 const diaMesAno = document.getElementById("dia-mes-ano");
 const horaMinSeg = document.getElementById("hora-min-seg");
 
-const btnBaterPonto = document.getElementById("bater-ponto")
+const btnBaterPonto = document.getElementById("btn-bater-ponto");
 btnBaterPonto.addEventListener("click", register);
+
+const dialogPonto = document.getElementById("dialog-ponto");
+
+const btnDialogFechar = document.getElementById("btn-dialog-fechar");
+btnDialogFechar.addEventListener("click", () =>{
+    dialogPonto.close();
+})
+
+const dialogData = document.getElementById("dialog-data");
+dialogData.textContent = "Data: " + getCurrentDate();
+
+const dialogHora = document.getElementById("dialog-hora");
+dialogData.textContent = "Hora: " + getCurrentHour();
+
 
 diaSemana.textContent = getWeekDay();
 diaMesAno.textContent = getCurrentDate();
 
-function getDateForForeigner(date1){
+function getCurrentPosition() {
+    navigator.geolocation.getCurrentPosition((position) =>{
+        return position;
+    });
+}
+
+const btnDialogBaterPonto = document.getElementById("btn-dialog-bater-ponto");
+btnDialogBaterPonto.addEventListener("click", () => {
+
+    let dataAtual = getCurrentDate();
+    let horaAtual = getCurrentHour();
+    let localizacao = getCurrentPosition();
+    let tipoPonto = document.getElementById("tipos-ponto").value;
+
+    let ponto = {
+        "data": dataAtual,
+        "hora": horaAtual,
+        "localizacao": localizacao,
+        "id": 1,
+        "tipo": tipoPonto
+    }
+
+    console.log(ponto);
+
+});
+
+function register() {
+    dialogPonto.showModal();
+}
+
+
+/*function getDateForForeigner(date1){
     const userLocale = navigator.language || 'en-US';
     const formattedDate = new Intl.DateTimeFormat(userLocale, {
         year: "numeric",
@@ -19,7 +64,7 @@ function getDateForForeigner(date1){
 }
 
 const date1 = new Date();
-console.log(getDateForForeigner(date1));
+console.log(getDateForForeigner(date1));*/
 
 function getWeekDay(){
     const date = new Date();
@@ -33,7 +78,11 @@ function getCurrentHour(){
     // padStart
     // slice()
     // formatos de hora considerando localidade do usuario
-    const hora = new Date();
+    const date = new Date();
+    return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+}
+    
+    /*const hora = new Date();
     let hour = hora.getHours();
     let min = hora.getMinutes();
     let sec = hora.getSeconds();
@@ -46,8 +95,7 @@ function getCurrentHour(){
     if (sec < 10) {
         sec = "0" + sec
     }
-    return hour + ":" + min + ":" + sec;
-}
+    return hour + ":" + min + ":" + sec;*/
 
 function printCurrentHour(){
     horaMinSeg.textContent = getCurrentHour();
@@ -70,10 +118,10 @@ function getCurrentDate(){
    return dia + "/" + mes + "/" + date.getFullYear(); 
 }
 
-function register(){
+/*function register(){
     // Abrir <dialog> com no minimo quatro butões
     
     alert("Bater Ponto!");
-}
+}*/
 
 setInterval(printCurrentHour,1000);

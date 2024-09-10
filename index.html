@@ -13,8 +13,17 @@
         <p id="hora-min-seg"> 08:01:35</p>
     </div>
     <button id="bater-ponto"> Bater ponto!</button>
-    <dialog>
-        <!-- Conteudo modal do ponto-->
+    <dialog id ="dialog-ponto">
+        <p id="dialog-data"></p>
+        <p id="dialog-hora"></p>
+        <select name="tipos-ponto" id="tipos-ponto">
+            <option value="entrada">Entrada</option>
+            <option value="intervalo">Intervalo</option>
+            <option value="volta-intervalo">Volta Intervalo</option>
+            <option value="saida">Saída</option>
+        </select>
+        <button id="btn-dialog-bater-ponto">Registrar ponto</button>
+        <button id="btn-dialog-fechar">X</button>
     </dialog>
     <!-- criar historico dos ultimos n registros-->
     <!-- criar footer para alerta-->
