@@ -8,10 +8,127 @@ const horaMinSeg = document.getElementById("hora-min-seg");
 const btnBaterPonto = document.getElementById("btn-bater-ponto");
 btnBaterPonto.addEventListener("click", register);
 
+const dialogPonto = document.getElementById("dialog-ponto");
+
+const btnDialogFechar = document.getElementById("btn-dialog-fechar");
+btnDialogFechar.addEventListener("click", () => {
+    dialogPonto.closest();
+})
+
+const nextRegister = {
+    "entrada": "intervalo",
+    "intervalo": "volta-intervalo",
+    "volta-intervalo": "saida",
+    "saida": "entrada"
+}
+
+let registerLocalStorage = getRegisterLocalStorage();
+
+const dialogData = document.getElementById("dialog-data");
+const dialogHora = document.getElementById("dialog-hora");
+
+const divAlertaRegistroPonto = document.getElementById("alerta-registro-ponto-fechar");
+
 diaSemana.textContent = getWeekDay();
 diaMesAno.textContent = getCurrentDate();
 
-function getDateForForeigner(date1){
+
+// TO-DO:
+// Por que esta função não retorna a localização?
+// [doc]~
+
+function getCurrentPosition(){
+    navigator.geolocation.getCurrentPosition((position) => {
+        return position;
+    });
+}
+
+// TO-DO:
+// Problema: os 5 segundos continuam contando
+
+const btnCloseAlertRegister = document.getElementById("alerta-registro-ponto");
+btnCloseAlertRegister.addEventListener("click", () =>{
+    divAlertaRegistroPonto.classList.remove("show");
+    divAlertaRegistroPonto.classList.add("hidden");
+});
+
+const btnDialogBaterPonto = document.getElementById("btn-dialog-bater-ponto");
+btnDialogBaterPonto.addEventListener("click", () => {
+    const typeRegister = document.getElementById("tipos-ponto");
+    let lastTypeRegister = localStorage.getItem("lastTypeRegister");
+
+    console.log(lastTypeRegister);
+
+    let ponto = {
+        "data": getCurrentDate(),
+        "hora": getCurrentHour(),
+        "localizacao": getCurrentPosition(),
+        "id": 1,
+        "tipo": typeRegister.value
+    }
+
+    console.log(ponto);
+
+    saveRegisterLocalStorage(ponto);
+
+    localStorage.setItem("lastDateRegister", ponto.data);
+    localStorage.setItem("lastTimeRegister", ponto.hora);
+
+    dialogPonto.close();
+
+    divAlertaRegistroPonto.classList.remove("hidden");
+    divAlertaRegistroPonto.classList.add("show");
+
+    setTimeout(() => {
+        divAlertaRegistroPonto.classList.remove("show");
+        divAlertaRegistroPonto.classList.add("hidden");
+    }, 5000);
+
+});
+
+function saveRegisterLocalStorage(register) {
+    const typeRegister = document.getElementById("tipos-ponto");
+    registerLocalStorage.push(register); // Array
+    localStorage.setItem("register", JSON.stringify(registerLocalStorage));
+    localStorage.setItem("lastTypeRegister", typeRegister.value);
+}
+
+function getRegisterLocalStorage() {
+    let registers = localStorage.getItem("register");
+
+    if(!registers) {
+        return [];
+    }
+
+    return JSON.parse(registers); // converte de JSON para Array
+
+}
+
+// TO-DO
+// alterar o nome da função
+
+function register(){
+    dialogData.textContent = "Data: " + getCurrentDate();
+    dialogHora.textContent = "Hora: " + getCurrentHour();
+
+    let lastTypeRegister = localStorage.getItem("lastTypeRegister");
+    if(lastTypeRegister) {
+        const typeRegister = document.getElementById("tipos-ponto");
+        typeRegister.value = nextRegister[lastTypeRegister];
+        let lastRegisterText = "Último registro: " + localStorage.getItem("lastDateRegister") + " - " + localStorage.getItem("lastTimeRegister") + " | " + localStorage.getItem("lastTypeRegister")
+        document.getElementById("dialog-last-register").textContent = lastRegisterText;
+    }
+
+    // TO-DO
+    // Como "matar" o intervalo a cada vez que o dialog é fechado?
+    setInterval(() => {
+        dialogHora.textContent = "Hora: " + getCurrentHour();
+    }, 1000);
+
+    dialogPonto.showModal();
+}
+
+/*function getDateForForeigner(date1){
     const userLocale = navigator.language || 'en-US';
     const formattedDate = new Intl.DateTimeFormat(userLocale, {
         year: "numeric",
@@ -22,7 +139,7 @@ function getDateForForeigner(date1){
 }
 
 const date1 = new Date();
-console.log(getDateForForeigner(date1));
+console.log(getDateForForeigner(date1));*/
 
 function getWeekDay(){
     const date = new Date();
@@ -32,53 +149,18 @@ function getWeekDay(){
 
 
 function getCurrentHour(){
-    // Considerar os metodos abaixo para incluir numeros < 10
-    // padStart
-    // slice()
-    // formatos de hora considerando localidade do usuario
-    const hora = new Date();
-    let hour = hora.getHours();
-    let min = hora.getMinutes();
-    let sec = hora.getSeconds();
-    if (hour < 10) {
-        hour = "0" + hour
-    }
-    if (min < 10) {
-        min = "0" + min
-    }
-    if (sec < 10) {
-        sec = "0" + sec
-    }
-    return hour + ":" + min + ":" + sec;
+    const date = new Date();
+    return String(date.getHours()).padStart(2, '0') + ":" + String(date.getMinutes()).padStart(2, '0') + ":" + String(date.getSeconds()).padStart(2, '0');
+}
+
+function getCurrentDate() {
+    const date = new Date();
+    return String(date.getDate()).padStart(2, '0') + "/" + String((date.getMonth() + 1)).padStart(2, '0') + "/" + String((date.getFullYear()).padStart(2,'0'));
 }
 
 function printCurrentHour(){
     horaMinSeg.textContent = getCurrentHour();
 }
 
-
-function getCurrentDate() {
-    // TO-DO:
-    // Alterar a solução para considerar padStart ou slice
-    // Considerar formatos diferentes de data, conforma localização
-    // do usuario dd/mm/yyyy, mm/dd/yyyy, yyyy/mm/dd
-    // Verificar se no Date()
-    const date = new Date();
-   let mes = date.getMonth();
-   let dia = date.getDate();
-   if (dia < 10) {
-        dia = "0" + dia
-   }
-   if (mes < 10) {
-        mes = "0" + (mes+1)
-   }
-   return dia + "/" + mes + "/" + date.getFullYear(); 
-}
-
-function register(){
-    // Abrir <dialog> com no minimo quatro butões
-    
-    alert("Bater Ponto!");
-}
-
+printCurrentHour();
 setInterval(printCurrentHour,1000);
